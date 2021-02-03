@@ -6,12 +6,9 @@ let L = 0; // max number of places by ride
 let C = 0; // number of rides
 let N = 0; // number of groups in cue
 
-let sum = 0;
-
-let rounds = 0;
-let groups = [];
-const groupCue = [];
+let groupCue = [];
 let groupRide = [];
+let sum = 0;
 
 function addGroupToCue(lineCount: number, group: string) {
   const pi: number = parseInt(group);
@@ -39,40 +36,48 @@ function getInputData() {
   });
 }
 
-function fillRide(peopleAccepted: number): number {
-  for (const pi of groupCue) {
-    if (peopleAccepted + pi > L) {
-      break;
+function fillRideAndGetSum() {
+  const starter = {
+    rideLength: 0,
+    sum: 0,
+  };
+
+  const result = groupCue.reduce((acc, pi) => {
+    if (acc.sum + pi > L) {
+      return acc;
     }
-    peopleAccepted += pi;
-    groupCue.shift();
-    groupRide.push(pi);
-  }
-  return peopleAccepted;
+    acc.sum += pi;
+    acc.rideLength += 1;
+    return acc;
+  }, starter);
+
+  groupRide = groupCue.splice(0, result.rideLength);
+
+  sum += result.sum;
 }
 
-function emptyRide() {
+function fillCueWithRide() {
   groupCue.push(groupRide);
-  groupCue.flat();
-  groupRide = [];
+  groupCue = groupCue.flat();
 }
 
-function start(): number {
+function makeARide() {
+  fillRideAndGetSum();
+  fillCueWithRide();
+}
+
+async function start() {
+  // It's still way too long.
+  // I would have liked to do a while loop in a promise.
+  // I think it's much faster but I don't have more time to do it.
   for (let i = 0; i < C; i++) {
-    let peopleAccepted = 0;
-
-    peopleAccepted = fillRide(peopleAccepted);
-    sum += peopleAccepted;
-
-    emptyRide();
+    makeARide();
   }
-
-  return sum;
 }
 
 async function runTest() {
   await getInputData();
-  const sum = start();
-  console.log(sum);
+  await start();
+  console.log("-------> final Sum", sum);
 }
 runTest();

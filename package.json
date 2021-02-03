@@ -4,7 +4,9 @@
   "description": "Managing accounting",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && ts-node ./src/run-test-v2.ts"
+    "start:v1": "tsc && ts-node ./src/run-test-v1.ts",
+    "start:v2": "tsc && ts-node ./src/run-test-v2.ts",
+    "start:v3": "tsc && ts-node ./src/run-test-v3.ts"
   },
   "keywords": [],
   "author": "Guillaume Jauffret",
