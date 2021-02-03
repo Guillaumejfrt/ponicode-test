@@ -28,8 +28,7 @@ interface IInputData {
 
 function addGroupToCue(lineCount: number, group: string) {
   const pi: number = parseInt(group);
-  // console.log("-------> group", group);
-  groupCue.set(lineCount - 2, group);
+  groupCue.set(lineCount - 2, pi);
 }
 
 function getInputData(): Promise<IInputData> {
@@ -55,11 +54,10 @@ function getInputData(): Promise<IInputData> {
 
 function fillRide(peopleAccepted: number): number {
   for (const [index, pi] of groupCue) {
-    const groupPi = Number(pi);
-    if (peopleAccepted + groupPi > L) {
+    if (peopleAccepted + pi > L) {
       break;
     }
-    peopleAccepted += groupPi;
+    peopleAccepted += pi;
     console.log("--> peopleAccepted", peopleAccepted);
     groupCue.delete(index);
     groupRide.set(index, pi);
