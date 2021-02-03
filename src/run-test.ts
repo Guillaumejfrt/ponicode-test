@@ -55,11 +55,12 @@ function getInputData(): Promise<IInputData> {
 
 function fillRide(peopleAccepted: number): number {
   for (const [index, pi] of groupCue) {
-    if (peopleAccepted + pi > L) {
+    const groupPi = Number(pi);
+    if (peopleAccepted + groupPi > L) {
       break;
     }
+    peopleAccepted += groupPi;
     console.log("--> peopleAccepted", peopleAccepted);
-    peopleAccepted += pi;
     groupCue.delete(index);
     groupRide.set(index, pi);
   }
@@ -78,7 +79,6 @@ function start(): number {
     let peopleAccepted = 0;
 
     peopleAccepted = fillRide(peopleAccepted);
-
     sum += peopleAccepted;
 
     emptyRide();
@@ -88,39 +88,8 @@ function start(): number {
 }
 
 async function runTest() {
-  const inputData: IInputData = await getInputData();
-  console.log("----> groupCue Size", inputData.groupCue.size);
+  await getInputData();
   const sum = start();
-  console.log("--> SUM", sum);
-  process.exit(1);
+  console.log(sum);
 }
 runTest();
-
-// console.log("-------> rl", rl);
-
-// tout sauvegarder dans une MAP
-// for (let i = 0; i < N; i++) {
-//   const pi: number = parseInt(rl);
-//   console.log("-------> pi", pi);
-//   groupCue.set(i, pi);
-// }
-
-// for (const [key, value] of groupCue) {
-// console.log(`${key} = ${value}`);
-// }
-for (let i = 0; i < C; i++) {
-  let peopleAccepted = 0;
-
-  for (const [index, pi] of groupCue) {
-    if (peopleAccepted + pi > L) {
-      break;
-    }
-    peopleAccepted += pi;
-    groupCue.delete(index);
-    groupCue.set(index, pi);
-  }
-
-  sum += peopleAccepted;
-}
-
-console.log(sum);
