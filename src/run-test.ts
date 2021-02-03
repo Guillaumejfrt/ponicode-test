@@ -8,9 +8,9 @@ import readline from "linebyline";
 
 const rl = readline("./roller_coaster.hard");
 
-let L = 0;
-let C = 0;
-let N = 0;
+let L = 0; // max number of places by ride
+let C = 0; // number of rides
+let N = 0; // number of groups in cue
 
 let sum = 0;
 
@@ -23,7 +23,7 @@ interface IInputData {
   C: number;
   L: number;
   N: number;
-  groupCue: any;
+  groupCue: Map<number, number>;
 }
 
 function addGroupToCue(lineCount: number, group: string) {
@@ -40,9 +40,9 @@ function getInputData(): Promise<IInputData> {
         L = parseInt(inputs[0]);
         C = parseInt(inputs[1]);
         N = parseInt(inputs[2]);
+      } else {
+        addGroupToCue(lineCount, line);
       }
-
-      addGroupToCue(lineCount, line);
     })
       .on("close", function () {
         resolve({ L, C, N, groupCue });
@@ -53,22 +53,35 @@ function getInputData(): Promise<IInputData> {
   });
 }
 
+function fillRide(peopleAccepted: number): number {
+  for (const [index, pi] of groupCue) {
+    if (peopleAccepted + pi > L) {
+      break;
+    }
+    console.log("--> peopleAccepted", peopleAccepted);
+    peopleAccepted += pi;
+    groupCue.delete(index);
+    groupRide.set(index, pi);
+  }
+  return peopleAccepted;
+}
+
+function emptyRide() {
+  for (const [index, pi] of groupRide) {
+    groupRide.delete(index);
+    groupCue.set(index, pi);
+  }
+}
+
 function start(): number {
   for (let i = 0; i < C; i++) {
-    console.log("--> i", i);
     let peopleAccepted = 0;
 
-    for (const [index, pi] of groupCue) {
-      if (peopleAccepted + pi > L) {
-        break;
-      }
-      console.log("--> peopleAccepted", peopleAccepted);
-      peopleAccepted += pi;
-      groupCue.delete(index);
-      groupCue.set(index, pi);
-    }
+    peopleAccepted = fillRide(peopleAccepted);
 
     sum += peopleAccepted;
+
+    emptyRide();
   }
 
   return sum;
