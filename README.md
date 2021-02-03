@@ -12,8 +12,8 @@ npm i
 npm run start:v[VERSION_NUMBER]
 ```
 
-V1: npm run start-v1
+V1: `npm run start-v1`
 
-V2: npm run start-v2
+V2: `npm run start-v2`
 
-V3: npm run start-v3
+V3: `npm run start-v3`
