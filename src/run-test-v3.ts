@@ -37,19 +37,22 @@ function getInputData() {
 }
 
 function fillRideAndGetSum() {
-  const starter = {
-    rideLength: 0,
-    sum: 0,
-  };
-
-  const result = groupCue.reduce((acc, pi) => {
-    if (acc.sum + pi > L) {
+  const result = groupCue.reduce(
+    (acc, pi) => {
+      acc.peopleCounted += pi;
+      if (acc.peopleCounted > L) {
+        return acc;
+      }
+      acc.sum += pi;
+      acc.rideLength += 1;
       return acc;
+    },
+    {
+      rideLength: 0,
+      sum: 0,
+      peopleCounted: 0,
     }
-    acc.sum += pi;
-    acc.rideLength += 1;
-    return acc;
-  }, starter);
+  );
 
   groupRide = groupCue.splice(0, result.rideLength);
 
